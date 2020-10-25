@@ -13,7 +13,7 @@ const date=document.querySelector('.date'),
     figcaption = document.querySelector('figcaption'),
     quoteBtn = document.querySelector('#quote-btn'),
     imageBtn = document.querySelector('#image-btn'),
-    imageBase="url('./assets/images/",
+    imageBase="./assets/images/",
     images = ['01.jpg', '02.jpg', '03.jpg', '05.jpg', '06.jpg', '07.jpg', '08.jpg', '09.jpg', '10.jpg', '11.jpg', '12.jpg', '13.jpg', '14.jpg', '15.jpg', '16.jpg', '17.jpg', '18.jpg', '19.jpg', '20.jpg'],
     partsOfDay=['night/', 'morning/', 'day/', 'evening/'],
     twentyFourHours=[];
@@ -23,7 +23,7 @@ const date=document.querySelector('.date'),
 function imagesOrder(){
 for (let i=0; i<partsOfDay.length; i++){
     for (let j=0; j<6; j++){
-        twentyFourHours.push(`${imageBase + partsOfDay[i] + images[Math.floor(Math.random() * images.length)]}')`);
+        twentyFourHours.push(`${imageBase + partsOfDay[i] + images[Math.floor(Math.random() * images.length)]}`);
     }
 }
 }
@@ -178,7 +178,12 @@ if (mins==0 &&secs==0){
  //Set Background
 
  function setBackground(n){
-    document.body.style.backgroundImage=twentyFourHours[n];
+    let img = new Image();
+    img.src=twentyFourHours[n];
+    img.onload = () => {      
+       document.body.style.backgroundImage=`url(${twentyFourHours[n]})`;
+      }; 
+    
  }
 
  //Get name
