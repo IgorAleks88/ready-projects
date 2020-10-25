@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+:root {
+  font-size: 14px;
+}
+
 body {
   font-family: 'Quicksand', sans-serif;
   display: flex;
@@ -13,15 +17,15 @@ body {
   text-align: center;
   height: 100vh;
   background-size: cover;
-  color: #000000;
+  color:mediumvioletred ;
 }
 
 .time {
-  font-size: 8rem;
+  font-size: 7rem;
 }
 
 h1 {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 h2 {
@@ -29,8 +33,60 @@ h2 {
   opacity: 0.8;
 }
 
-@media (max-width: 700px) {
-  .time {
-    font-size: 6rem;
+.weather-container{
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.quote-container{
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+.image-btn-container{
+  margin-top: 2rem;
+}
+.btn {
+  width: 60px;
+  height: 60px;
+  border: 0;
+  border-radius: 50%;
+  background-image: url("https://www.pngarts.com/files/7/Update-Button-PNG-Image.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: grayscale(.8);
+  margin: 10px;
+}
+.btn:hover {
+  filter: grayscale(.2);
+}
+.btn:active,
+.btn:focus {
+  outline: 0;
+}
+.btn:active{
+  transform: scale(1.02)
+}
+
+@media (max-width: 400px) {
+  :root {
+    font-size: 8px;
   }
 }
+
+@media (max-width: 1280px){
+  :root {
+    font-size: 14px;
+  }
+}
+@media (max-width: 1000px){
+  :root {
+    font-size: 12px;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    font-size: 10px;
+  }
+}
+
