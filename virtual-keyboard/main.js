@@ -1,10 +1,16 @@
-const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace"];
-        const digitsShiftedEn = ["!", "@", "#", "$", "%", "^", "&",  "*", "(", "0", "backspace"];
-        const digitsShiftedRu = ["!", '"', "№", ";", "%", ":", "?",  "*", "(", "0", "backspace" ];
+        const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace"];
+        const digitsShiftedEn = ["!", "@", "#", "$", "%", "^", "&",  "*", "(", ")", "backspace"];
+        const digitsShiftedRu = ["!", '"', "№", ";", "%", ":", "?",  "*", "(", ")", "backspace" ];
         const keysEn = [
             "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]",
             "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "enter",
             "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/",
+            "shift", "space", "enru"
+        ];
+        const keysShiftedEn = [
+            "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}",
+            "caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "enter",
+            "done", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?",
             "shift", "space", "enru"
         ];
         const keysRu = [
@@ -13,6 +19,12 @@ const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace"];
             "done", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".",
             "shift", "space", "enru"
         ];
+        const keysShiftedRu = [
+            "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ",
+            "caps", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "enter",
+            "done", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",",
+            "shift", "space", "enru"
+        ]
 
 const keyboard = {
     
@@ -32,6 +44,52 @@ const keyboard = {
         capsLock: false,
         language: true,
         shift: false
+    },
+    
+    caps(){
+        for (const key of this.elements.keys){
+            if (key.childElementCount===0) {
+                key.textContent=this.properties.capsLock ? key.textContent.toUpperCase() :key.textContent.toLowerCase();
+            }
+        }
+    },
+     
+    change() {
+        keyLeyout=[];
+        if (this.properties.shift) {
+            if (this.properties.language){
+            keyLeyout=keyLeyout.concat(digitsShiftedEn, keysShiftedEn);
+            } else {
+                keyLeyout=keyLeyout.concat(digitsShiftedRu, keysShiftedRu); 
+            }
+        } else {
+            if (this.properties.language){
+                keyLeyout=keyLeyout.concat(digits, keysEn);
+                } else {
+                    keyLeyout=keyLeyout.concat(digits, keysRu); 
+                }
+        }
+
+        for (let i=0; i<this.elements.keys.length; i++){
+            if (this.elements.keys[i].childElementCount===0){
+                if (this.properties.capsLock&&!this.properties.shift) {
+                    this.elements.keys[i].textContent=keyLeyout[i].toUpperCase();
+                };
+                if (!this.properties.capsLock&&this.properties.shift) {
+                    this.elements.keys[i].textContent=keyLeyout[i].toUpperCase();
+                };
+                if (!this.properties.capsLock&&!this.properties.shift) {
+                    this.elements.keys[i].textContent=keyLeyout[i].toLowerCase();
+                };
+                if (this.properties.capsLock&&this.properties.shift) {
+                    this.elements.keys[i].textContent=keyLeyout[i].toLowerCase();
+                };
+            }
+        }
+
+    
+
+    
     },
 
     init() {
@@ -118,6 +176,14 @@ const keyboard = {
                         keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);
                     });
                 break;
+            case "shift":
+                    keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
+                    keyElement.innerHTML = createIconHtmL("eject");
+                    keyElement.addEventListener('click', ()=> {
+                        this._toggleShift();
+                        keyElement.classList.toggle("keyboard__key--active", this.properties.shift);
+                    });
+                break;    
             case "enter":
                         keyElement.classList.add("keyboard__key--wide");
                         keyElement.innerHTML = createIconHtmL("keyboard_return");
@@ -143,9 +209,9 @@ const keyboard = {
                         });
                 break;
             default:
-                    keyElement.textContent=key.toLowerCase();
+                    keyElement.textContent=key;
                     keyElement.addEventListener('click', ()=> {
-                        this.properties.value+= this.properties.capsLock ? key.toUpperCase() : key.toLowerCase();
+                        this.properties.value+=keyElement.textContent;
                         this._triggerEvent("oninput");
                     });
             break;
@@ -172,35 +238,19 @@ const keyboard = {
     },       
     _toggleCapsLock(){
         this.properties.capsLock=!this.properties.capsLock;
+        this.change();
+        
+    },
 
-        for (const key of this.elements.keys){
-            if (key.childElementCount===0) {
-                key.textContent=this.properties.capsLock ? key.textContent.toUpperCase() :key.textContent.toLowerCase();
-            }
-        }
+    _toggleShift(){
+        this.properties.shift=!this.properties.shift;
+        this.change();
     },
 
     _toggleEnRu(){
-        keyLeyout=[];
+       
         this.properties.language=!this.properties.language;
-        if (this.properties.shift) {
-            if (this.properties.language){
-            keyLeyout=keyLeyout.concat(digitsShiftedEn, keysEn);
-            } else {
-                keyLeyout=keyLeyout.concat(digitsShiftedRu, keysRu); 
-            }
-        } else {
-            if (this.properties.language){
-                keyLeyout=keyLeyout.concat(digits, keysEn);
-                } else {
-                    keyLeyout=keyLeyout.concat(digits, keysRu); 
-                }
-        }
-        for (let i=0; i<this.elements.keys.length; i++){
-            if (this.elements.keys[i].childElementCount===0){
-                this.elements.keys[i].textContent=keyLeyout[i];
-            }
-        }
+        this.change();
         
     },
     
