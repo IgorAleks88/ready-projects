@@ -5,25 +5,25 @@
             "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]",
             "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "enter",
             "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/",
-            "shift", "space", "enru"
+            "shift", "space", "enru", "left", "right"
         ];
         const keysShiftedEn = [
             "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}",
             "caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "enter",
             "done", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?",
-            "shift", "space", "enru"
+            "shift", "space", "enru", "left", "right"
         ];
         const keysRu = [
             "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ",
             "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
             "done", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".",
-            "shift", "space", "enru"
+            "shift", "space", "enru", "left", "right"
         ];
         const keysShiftedRu = [
             "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ",
             "caps", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "enter",
             "done", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",",
-            "shift", "space", "enru"
+            "shift", "space", "enru", "left", "right"
         ];
         const inputArea = document.querySelector(".use-keyboard-input");
         let cursorPos=0;
@@ -148,19 +148,38 @@ const keyboard = {
         keyElement.classList.add("keyboard__key");
 
         switch (key) {
+            case "left":
+                keyElement.innerHTML = createIconHtmL("keyboard_arrow_left");
+                keyElement.addEventListener('click', ()=> {
+                    this.getCursorPosition();
+                    cursorPos--;
+                    if (cursorPos<0){
+                        cursorPos=0;
+                    }
+                    this._triggerEvent("oninput");                    
+                });
+            break;
+            case "right":
+                keyElement.innerHTML = createIconHtmL("keyboard_arrow_right");
+                keyElement.addEventListener('click', ()=> {
+                    this.getCursorPosition();
+                    cursorPos++;
+                    this._triggerEvent("oninput");                    
+                });
+            break;
             case "enru":
                 keyElement.classList.add("keyboard__key--wide");
                 if (this.properties.language){
-                    keyElement.innerHTML = '<img class="language-icon" src="../assets/flag_en.png" >';
+                    keyElement.innerHTML = '<img class="language-icon" src="./assets/flag_en.png" >';
                 } else {
-                    keyElement.innerHTML = '<img class="language-icon" src="../assets/flag_ru.png" >';
+                    keyElement.innerHTML = '<img class="language-icon" src="./assets/flag_ru.png" >';
                 }
                 keyElement.addEventListener('click', ()=> {
                     this._toggleEnRu();
                     if (this.properties.language){
-                        keyElement.innerHTML = '<img class="language-icon" src="../assets/flag_en.png" >';
+                        keyElement.innerHTML = '<img class="language-icon" src="./assets/flag_en.png" >';
                     } else {
-                        keyElement.innerHTML = '<img class="language-icon" src="../assets/flag_ru.png" >';
+                        keyElement.innerHTML = '<img class="language-icon" src="./assets/flag_ru.png" >';
                     }
                 });
                 break;
@@ -195,7 +214,8 @@ const keyboard = {
                         keyElement.classList.add("keyboard__key--wide");
                         keyElement.innerHTML = createIconHtmL("keyboard_return");
                         keyElement.addEventListener('click', ()=> {
-                            this.properties.value+=this.properties.value.substring(0,cursorPos)+"\n"+this.properties.value.substring(cursorPos);
+                            this.properties.value=this.properties.value.slice(0, cursorPos)+"\n"+this.properties.value.slice(cursorPos, this.properties.value.length);
+                            cursorPos++;
                             this._triggerEvent("oninput");                            
                         });
                 break;
@@ -210,6 +230,7 @@ const keyboard = {
                         });
                 break;
             case "done":
+                        keyElement.setAttribute("name","done-button");
                         keyElement.classList.add("keyboard__key--wide", "keyboard__key--dark");
                         keyElement.innerHTML = createIconHtmL("check_circle");
                         keyElement.addEventListener('click', ()=> {
@@ -285,8 +306,10 @@ window.addEventListener("DOMContentLoaded", function() {
     keyboard.init();
 })
 window.addEventListener('click', function(){
+   
+    if (event.target.name!="done-button" && event.target.textContent!="check_circle"){
     inputArea.focus();
-    keyboard.getCursorPosition();
+    keyboard.getCursorPosition();}
 })
 inputArea.addEventListener('change', function() {
     keyboard.properties.value=inputArea.value;
