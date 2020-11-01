@@ -1,29 +1,29 @@
-        const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "backspace"];
-        const digitsShiftedEn = ["!", "@", "#", "$", "%", "^", "&",  "*", "(", ")", "backspace"];
-        const digitsShiftedRu = ["!", '"', "№", ";", "%", ":", "?",  "*", "(", ")", "backspace" ];
+        const digits = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "=", "backspace"];
+        const digitsShiftedEn = ["!", "@", "#", "$", "%", "^", "&",  "*", "(", ")", "_", "+", "backspace"];
+        const digitsShiftedRu = ["!", '"', "№", ";", "%", ":", "?",  "*", "(", ")", "_", "+", "backspace" ];
         const keysEn = [
             "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]",
             "caps", "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'", "enter",
-            "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/",
-            "shift", "space", "enru", "left", "right"
+            "done", "z", "x", "c", "v", "b", "n", "m", ",", ".", "/", "\\",
+            "voice", "shift", "space", "enru", "left", "right", "sound"
         ];
         const keysShiftedEn = [
             "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "{", "}",
             "caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ":", '"', "enter",
-            "done", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?",
-            "shift", "space", "enru", "left", "right"
+            "done", "Z", "X", "C", "V", "B", "N", "M", "<", ">", "?", "|",
+            "voice", "shift", "space", "enru", "left", "right", "sound"
         ];
         const keysRu = [
             "й", "ц", "у", "к", "е", "н", "г", "ш", "щ", "з", "х", "ъ",
             "caps", "ф", "ы", "в", "а", "п", "р", "о", "л", "д", "ж", "э", "enter",
-            "done", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".",
-            "shift", "space", "enru", "left", "right"
+            "done", "я", "ч", "с", "м", "и", "т", "ь", "б", "ю", ".", "\\",
+            "voice", "shift", "space", "enru", "left", "right", "sound"
         ];
         const keysShiftedRu = [
             "Й", "Ц", "У", "К", "Е", "Н", "Г", "Ш", "Щ", "З", "Х", "Ъ",
             "caps", "Ф", "Ы", "В", "А", "П", "Р", "О", "Л", "Д", "Ж", "Э", "enter",
-            "done", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",",
-            "shift", "space", "enru", "left", "right"
+            "done", "Я", "Ч", "С", "М", "И", "Т", "Ь", "Б", "Ю", ",", "/",
+            "voice", "shift", "space", "enru", "left", "right", "sound"
         ];
         const inputArea = document.querySelector(".use-keyboard-input");
         let cursorPos=0;
@@ -138,7 +138,7 @@ const keyboard = {
         keyLeyout=keyLeyout.concat(digits,keysEn);
         keyLeyout.forEach(key => {
             const keyElement = document.createElement("button");
-            const insertLineBreakEn = ["backspace", "]", "enter",  "/"].indexOf(key) !== -1;
+            const insertLineBreakEn = ["backspace", "]", "enter",  "\\"].indexOf(key) !== -1;
             const insertLineBreakRu = ["backspace", "ъ", "enter",  "."].indexOf(key) !== -1;
         
 
@@ -305,8 +305,11 @@ const keyboard = {
 window.addEventListener("DOMContentLoaded", function() {
     keyboard.init();
 })
+window.addEventListener('keypress', function(){
+    let systemLanguage = keysEn.indexOf(event.key) !== -1;
+    console.log(systemLanguage);
+})
 window.addEventListener('click', function(){
-   
     if (event.target.name!="done-button" && event.target.textContent!="check_circle"){
     inputArea.focus();
     keyboard.getCursorPosition();}
