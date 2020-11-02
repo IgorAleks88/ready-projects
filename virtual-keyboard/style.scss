@@ -67,6 +67,9 @@ $keys-activated-color:#EC407A;
   .keyboard__key:active {
     background-color: $active-keys-background-color;
   }
+  .keyboard__key--pressed {
+    background-color: $active-keys-background-color;
+  }
   
   .keyboard__key--wide {
     width: 12%;
