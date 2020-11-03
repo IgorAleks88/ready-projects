@@ -9,6 +9,9 @@ $keys-activated-color:#EC407A;
     box-sizing: border-box;
   }
   
+  :root {
+    font-size: 10px;
+  }
   .use-keyboard-input {
     display: block;
     width: 90%;
@@ -52,7 +55,7 @@ $keys-activated-color:#EC407A;
     background-color:$keys-background-color;
     color: $keys-text-color;
     border: solid 2px $keys-border-color;
-    font-size: 1.05rem;
+    font-size: 1.4rem;
     outline: none;
     cursor: pointer;
     display: inline-flex;
@@ -101,4 +104,19 @@ $keys-activated-color:#EC407A;
   
   .language-icon{
     width: 32px;
+  }
+
+  @media(max-width:768px){
+    .keyboard__key {
+      margin: 1px;
+      width: 6.2%;
+    } 
+    .keyboard__key--wide {
+      width: 12%;
+    }
+    .keyboard__key--extra-wide {
+      width: 30%;
+      max-width: 500px;
+    }
+    
   }
