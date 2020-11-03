@@ -36,7 +36,8 @@ const keyboard = {
     elements: {
         main: null,
         keysContainer: null,
-        keys: []
+        keys: [],
+        keysSound: null
     },
 
     eventHandlers : {
@@ -52,6 +53,36 @@ const keyboard = {
         shift: false,
         sound: true,
         voice: false
+    },
+
+    playSound(key) {
+        if (this.properties.sound) {
+            switch (key) {
+                case "charKey":
+                    if (this.properties.language) {
+                        this.elements.keysSound.src='./assets/sounds/sound1.mp3';
+                    } else {
+                        this.elements.keysSound.src='./assets/sounds/sound2.mp3';
+                    }
+                    break;
+                case "backspace":
+                    this.elements.keysSound.src='./assets/sounds/backspace.mp3';
+                    break;
+                case "space":
+                    this.elements.keysSound.src='./assets/sounds/space.mp3';
+                    break;
+                case "shift":
+                    this.elements.keysSound.src='./assets/sounds/shift.mp3';
+                    break;
+                case "capslock":
+                    this.elements.keysSound.src='./assets/sounds/capslock.mp3';
+                    break;
+                case "enter":
+                    this.elements.keysSound.src='./assets/sounds/enter.mp3';
+                    break;
+            }
+            this.elements.keysSound.play();
+        }
     },
 
     getCursorPosition(){
@@ -109,9 +140,10 @@ const keyboard = {
 
         this.elements.main=document.createElement("div");
         this.elements.keysContainer=document.createElement("div");
+        this.elements.keysSound=document.createElement("audio");
 
         //Setup main elements
-
+        this.elements.keysSound.src='./assets/sounds/sound1.mp3';
         this.elements.main.classList.add("keyboard", "keyboard--hidden"); 
         this.elements.keysContainer.classList.add("keyboard__keys");
         this.elements.keysContainer.appendChild(this._createKeys());
@@ -120,6 +152,7 @@ const keyboard = {
         //Add to DOM
 
         this.elements.main.appendChild(this.elements.keysContainer);
+        this.elements.main.appendChild(this.elements.keysSound);
         document.body.appendChild(this.elements.main);
 
         inputArea.addEventListener("focus", ()=> {
@@ -212,6 +245,7 @@ const keyboard = {
                 keyElement.classList.add("keyboard__key--wide");
                 keyElement.innerHTML = createIconHtmL("backspace");
                 keyElement.addEventListener('click', ()=> {
+                    this.playSound("backspace");
                     this.getCursorPosition();
                     this.properties.value=this.properties.value.substring(0,cursorPos-1)+this.properties.value.substring(cursorPos);
                     cursorPos--;
@@ -222,6 +256,7 @@ const keyboard = {
                     keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
                     keyElement.innerHTML = createIconHtmL("keyboard_capslock");
                     keyElement.addEventListener('click', ()=> {
+                        this.playSound("capslock");
                         this._toggleCapsLock();
                         keyElement.classList.toggle("keyboard__key--active", this.properties.capsLock);                        
                     });
@@ -230,6 +265,7 @@ const keyboard = {
                     keyElement.classList.add("keyboard__key--wide", "keyboard__key--activatable");
                     keyElement.innerHTML = createIconHtmL("eject");
                     keyElement.addEventListener('click', ()=> {
+                        this.playSound("shift");
                         this._toggleShift();
                                                
                     });
@@ -238,6 +274,7 @@ const keyboard = {
                         keyElement.classList.add("keyboard__key--wide");
                         keyElement.innerHTML = createIconHtmL("keyboard_return");
                         keyElement.addEventListener('click', ()=> {
+                            this.playSound("enter");
                             this.properties.value=this.properties.value.slice(0, cursorPos)+"\n"+this.properties.value.slice(cursorPos, this.properties.value.length);
                             cursorPos++;
                             this._triggerEvent("oninput");                            
@@ -247,6 +284,7 @@ const keyboard = {
                         keyElement.classList.add("keyboard__key--extra-wide");
                         keyElement.innerHTML = createIconHtmL("space_bar");
                         keyElement.addEventListener('click', ()=> {
+                            this.playSound("space");
                             this.getCursorPosition();
                             this.properties.value=this.properties.value.slice(0, cursorPos)+" "+this.properties.value.slice(cursorPos, this.properties.value.length);
                             cursorPos++;
@@ -265,6 +303,7 @@ const keyboard = {
             default:
                     keyElement.textContent=key;
                     keyElement.addEventListener('click', ()=> {
+                        this.playSound("charKey");
                         this.getCursorPosition();
                         this.properties.value=this.properties.value.slice(0, cursorPos)+keyElement.textContent+this.properties.value.slice(cursorPos, this.properties.value.length);
                         cursorPos++;
