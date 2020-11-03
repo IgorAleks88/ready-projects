@@ -29,7 +29,10 @@
         let cursorPos=0;
         const createIconHtmL = (icon_name) => {
             return `<i class="material-icons">${icon_name}</i>`;
-        }
+        };
+        window.SpeechRecognition= window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang ='en-US';
 
 const keyboard = {
     
@@ -350,12 +353,22 @@ const keyboard = {
 
     _toggleMic(){
         this.properties.voice=!this.properties.voice;
+        if (this.properties.voice) {
+            recognition.start();
+        } else {
+            recognition.abort();
+        }
     },
 
     _toggleEnRu(){
        
         this.properties.language=!this.properties.language;
         this.change();
+        if (this.properties.language){
+        recognition.lang = 'en-US';
+        } else {
+            recognition.lang = 'ru-RU'; 
+        }
         
     },
     
@@ -480,4 +493,24 @@ inputArea.addEventListener('change', function() {
 })
 inputArea.addEventListener('focus', function() {
     inputArea.setSelectionRange(cursorPos, cursorPos);
+})
+
+recognition.addEventListener('result', e=>{
+    if (keyboard.properties.voice){
+    const transcript =Array.from(e.results)
+    .map(result=>result[0])
+    .map(result=>result.transcript).join('');
+    if (e.results[0].isFinal) {
+    keyboard.getCursorPosition();
+    keyboard.properties.value=keyboard.properties.value.slice(0, cursorPos)+transcript+keyboard.properties.value.slice(cursorPos, keyboard.properties.value.length)+' ';
+    cursorPos+=transcript.length;
+    keyboard._triggerEvent("oninput");
+    console.log(keyboard.properties.value);
+    }
+    }
+})
+
+recognition.addEventListener('end', () => {
+    if (keyboard.properties.voice){
+    recognition.start()}
 })
